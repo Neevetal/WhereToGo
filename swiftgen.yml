@@ -1,0 +1,8 @@
+xcassets:
+  inputs:
+    - WhereToGo/Resources/Assets.xcassets
+    - WhereToGo/Resources/Colors.xcassets
+  outputs:
+    templateName: swift5
+    output: WhereToGo/Resources/Assets.swift
+
