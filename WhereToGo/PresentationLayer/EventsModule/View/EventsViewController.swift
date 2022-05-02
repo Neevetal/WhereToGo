@@ -1,5 +1,5 @@
 //
-//  EventsListViewController.swift
+//  EventsViewController.swift
 //  WhereToGo
 //
 //  Created by Vitaly Malkov on 08.01.2022.
@@ -7,11 +7,11 @@
 
 import UIKit
 
-// начать заливать на битбакет! +
+// добавить в mvp configurator
 // добавить индикатор загрузки и refresh tableview
 // добавить кеширование данных
 
-class EventsListViewController: BaseViewController {
+class EventsViewController: BaseViewController, EventsViewInput {
 
     // MARK: - IBOutlets
 
@@ -19,7 +19,9 @@ class EventsListViewController: BaseViewController {
 
     // MARK: - Properties
 
-    let networkDataFetcher = NetworkDataFetcher()
+    public var output: EventsViewOutput!
+
+    private let networkingService = NetworkingService()
     private var places: Places?
     private var events: Events?
 
@@ -36,7 +38,15 @@ class EventsListViewController: BaseViewController {
 
         configureNavigationBarTitleFont()
         configureBaseNavigationBar()
-        fetchEvents()
+        output.viewWillAppear()
+    }
+
+    // MARK: - EventsViewInput
+
+    func showEvents(_ events: Events) {
+
+        self.events = events
+        tableView.reloadData()
     }
 
     // MARK: - Private methods
@@ -46,18 +56,6 @@ class EventsListViewController: BaseViewController {
         tableView.separatorStyle = .none
         tableView.delegate = self
         tableView.dataSource = self
-    }
-
-    // переделать на events получение с деталкой по id
-
-    private func fetchEvents() {
-        let urlString = "https://kudago.com/public-api/v1.2/events/?fields=title,dates,description,body_text,price,place,images&text_format=text&expand=place&page=2"
-        self.networkDataFetcher.fetchEvents(urlString: urlString) { [weak self] (events) in
-            guard let self = self else { return }
-            guard let events = events else { return }
-            self.events = events
-            self.tableView.reloadData()
-        }
     }
 
     @objc func backAction() {
@@ -71,7 +69,7 @@ class EventsListViewController: BaseViewController {
 
 // MARK: - UITableViewDelegate
 
-extension EventsListViewController: UITableViewDelegate {
+extension EventsViewController: UITableViewDelegate {
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Event", bundle: nil)
@@ -80,12 +78,13 @@ extension EventsListViewController: UITableViewDelegate {
         vc.event = event
 
         self.navigationController?.pushViewController(vc, animated: true)
+        output.didPressedCell()
     }
 }
 
 // MARK: - UITableViewDataSource
 
-extension EventsListViewController: UITableViewDataSource {
+extension EventsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return events?.results?.count ?? 0
@@ -98,4 +97,3 @@ extension EventsListViewController: UITableViewDataSource {
         return cell
     }
 }
-
