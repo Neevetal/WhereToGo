@@ -35,6 +35,7 @@ class EventsViewController: BaseViewController, EventsViewInput {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        startLoader()
 
         configureNavigationBarTitleFont()
         configureBaseNavigationBar()
@@ -46,6 +47,7 @@ class EventsViewController: BaseViewController, EventsViewInput {
     func showEvents(_ events: Events) {
 
         self.events = events
+        stopLoader()
         tableView.reloadData()
     }
 
@@ -54,6 +56,7 @@ class EventsViewController: BaseViewController, EventsViewInput {
     private func configureTableView() {
         tableView.backgroundColor = .white
         tableView.separatorStyle = .none
+        tableView.refreshControl = refreshControl
         tableView.delegate = self
         tableView.dataSource = self
     }
@@ -64,6 +67,14 @@ class EventsViewController: BaseViewController, EventsViewInput {
 
     @objc func btn_clicked(_ sender: UIBarButtonItem) {
         // Do something
+    }
+
+    // MARK: - Refresh Data
+
+    override func refreshData(_ sender: UIRefreshControl) {
+        super.refreshData(sender)
+
+        tableView.reloadData()
     }
 }
 

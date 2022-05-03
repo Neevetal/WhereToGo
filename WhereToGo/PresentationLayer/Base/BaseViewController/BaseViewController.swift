@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
     // MARK: - Constants
@@ -14,44 +15,26 @@ class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
 
     // MARK: - Properties
 
-    private var loaderView: UIActivityIndicatorView = {
+   //public var redActivityIndicator = RedActivityIndicator()
+
+    private var redLoader: RedActivityIndicator = {
         $0.isUserInteractionEnabled = false
         $0.autoresizingMask = [.flexibleLeftMargin, .flexibleTopMargin, .flexibleBottomMargin, .flexibleRightMargin]
         $0.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
         return $0
-    }(UIActivityIndicatorView(frame: .zero))
-
-   // var loaderFullScreen: FullScreenLoaderViewController!
-
-    private var errorView: UILabel = {
-        $0.textAlignment = .center
-        $0.font = .systemFont(ofSize: 14.0, weight: .regular)
-        $0.numberOfLines = 0
-        return $0
-    }(UILabel(frame: .zero))
+    }(RedActivityIndicator(frame: .zero))
 
 //    public lazy var navigationBarAssistant: NavigationBarAssistant? = {
 //        $0.create(self)
 //        return $0
 //    }(NavigationBarAssistant())
 
-//    public lazy var refreshControl: UIRefreshControl = {
-//        loaderBasePresenter.stop()
-//        let refresh = UIRefreshControl()
-//        refresh.tintColor = .clear
-//
-//        backView.backgroundColor = .clear
-//        refresh.addSubview(backView)
-//        backView.translatesAutoresizingMaskIntoConstraints = false
-//        backView.snp.makeConstraints { target in
-//            target.left.right.top.equalTo(0)
-//            target.bottom.equalTo(-50)
-//        }
-//
-//        refresh.addTarget(self, action: #selector(refreshData(_:)), for: .valueChanged)
-//        loaderBasePresenter.start(subView: backView)
-//        return refresh
-//    }()
+    public lazy var refreshControl: UIRefreshControl = {
+        let refresh = UIRefreshControl()
+        //refresh.tintColor = .clear
+        refresh.addTarget(self, action: #selector(refreshData(_:)), for: .valueChanged)
+        return refresh
+    }()
 
     // MARK: - Lifecycle
 
@@ -145,48 +128,22 @@ class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
 
     // MARK: - Loader
 
-//    func startLoader() {
-//        stopLoader()
-//        hideError()
-//
-//        view.addSubview(loaderView)
-//
-//        loaderView.startAnimating()
-//
-//        loaderView.translatesAutoresizingMaskIntoConstraints = false
-//        loaderView.snp.makeConstraints { target in
-//            target.width.equalTo(Defaults.indicatorSize)
-//            target.height.equalTo(Defaults.indicatorSize)
-//            target.center.equalTo(self.view)
-//        }
-//    }
+    func startLoader() {
+        stopLoader()
+        view.addSubview(redLoader)
 
-//    func stopLoader() {
-//        loaderView.stopAnimating()
-//        view.willRemoveSubview(loaderView)
-//    }
+        redLoader.show()
 
-//    func startFullScreenLoader(_ attached: Bool = false) {
-//        loaderFullScreen = FullScreenLoaderViewController()
-//
-//        if attached {
-//            view.addSubview(loaderFullScreen.view)
-//            loaderFullScreen.view.fillToSuperview()
-//        } else {
-//            loaderFullScreen.modalPresentationStyle = .fullScreen
-//            navigationController?.present(loaderFullScreen, animated: false, completion: nil)
-//        }
-//    }
-//
-//    func stopFullScreenLoader() {
-//        if loaderFullScreen != nil {
-//            if let loaderSuperView = loaderFullScreen.view.superview, self.view == loaderSuperView {
-//                loaderFullScreen.view.removeFromSuperview()
-//            } else {
-//                loaderFullScreen.dismiss(animated: false, completion: nil)
-//            }
-//        }
-//    }
+        redLoader.translatesAutoresizingMaskIntoConstraints = false
+        redLoader.snp.makeConstraints { target in
+            target.width.height.equalTo(32)
+            target.center.equalTo(self.view)
+        }
+    }
+
+    func stopLoader() {
+        redLoader.hide()
+    }
 
     // MARK: - Error
 
@@ -206,11 +163,6 @@ class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
 //        }
 //    }
 
-    func hideError() {
-        errorView.isHidden = true
-        view.willRemoveSubview(errorView)
-    }
-
     // MARK: - UIGestureRecognizerDelegate
 
     func gestureRecognizerShouldBegin(_: UIGestureRecognizer) -> Bool {
@@ -219,14 +171,13 @@ class BaseViewController: UIViewController, UIGestureRecognizerDelegate {
 
     // MARK: - Refresh control
 
-//    @objc func refreshData(_: UIRefreshControl) {
-//        // убираем с задержкой чтобы все было плавно и красиво, без задержки дергается экран
-//        loaderBasePresenter.play()
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//            // self.backView.removeFromSuperview()
-//            self.refreshControl.endRefreshing()
-//        }
-//    }
+    @objc func refreshData(_: UIRefreshControl) {
+        //redActivityIndicator.show()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.refreshControl.endRefreshing()
+        }
+    }
 
     // MARK: - Create
 

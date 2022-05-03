@@ -1,8 +1,7 @@
-# Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
 
 target 'WhereToGo' do
   
+  platform :ios, '12.3'
   inhibit_all_warnings!
   use_frameworks!
 
@@ -16,6 +15,7 @@ target 'WhereToGo' do
   # UI
 
   pod 'DeviceKit', '~> 4.5.1'
+  pod 'SnapKit', '5.0.1'
 
  # Utils
   

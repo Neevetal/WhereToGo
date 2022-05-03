@@ -23,11 +23,12 @@ internal typealias AssetImageTypeAlias = ImageAsset.Image
 internal enum Asset {
   internal enum Assets {
     internal static let accentColor = ColorAsset(name: "AccentColor")
-    internal static let vector = ImageAsset(name: "Vector")
-    internal static let iconApp = ImageAsset(name: "iconApp")
     internal static let address = ImageAsset(name: "address")
     internal static let date = ImageAsset(name: "date")
     internal static let price = ImageAsset(name: "price")
+    internal static let loader = ImageAsset(name: "loader")
+    internal static let vector = ImageAsset(name: "Vector")
+    internal static let iconApp = ImageAsset(name: "iconApp")
     internal static let logoApp = ImageAsset(name: "logoApp")
     internal static let logoWhite = ImageAsset(name: "logoWhite")
     internal static let noImage = ImageAsset(name: "noImage")
